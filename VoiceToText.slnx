@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/VoiceToText.App/VoiceToText.App.csproj" />
+    <Project Path="src/VoiceToText.Core.Audio/VoiceToText.Core.Audio.csproj" />
+    <Project Path="src/VoiceToText.Core.Hotkey/VoiceToText.Core.Hotkey.csproj" />
+    <Project Path="src/VoiceToText.Core.OpenAI/VoiceToText.Core.OpenAI.csproj" />
+    <Project Path="src/VoiceToText.Core.Paste/VoiceToText.Core.Paste.csproj" />
+  </Folder>
+</Solution>

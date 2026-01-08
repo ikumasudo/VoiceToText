@@ -1,0 +1,88 @@
+<Window x:Class="VoiceToText.App.Views.HistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:VoiceToText.App.Models"
+        Title="Transcription History"
+        Width="500" Height="400"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Recent Transcriptions" FontSize="16" FontWeight="Bold" Margin="0,0,0,12"/>
+
+        <ListBox x:Name="HistoryList" Grid.Row="1" BorderThickness="1" BorderBrush="#DDD">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:HistoryEntry}">
+                    <Border Padding="12,8" BorderBrush="#EEE" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Text or Error -->
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="{Binding Text}"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxWidth="350"
+                                       Visibility="{Binding IsSuccess, Converter={StaticResource BoolToVis}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="{Binding Error}"
+                                       Foreground="#F44336"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxWidth="350">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSuccess}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Copy Button -->
+                            <Button Grid.Row="0" Grid.Column="1"
+                                    Content="Copy"
+                                    Padding="8,4"
+                                    Margin="8,0,0,0"
+                                    Click="CopyButton_Click"
+                                    Visibility="{Binding IsSuccess, Converter={StaticResource BoolToVis}}"/>
+
+                            <!-- Timestamp and Duration -->
+                            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                        Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}"
+                                           Foreground="#888" FontSize="11"/>
+                                <TextBlock Text=" - " Foreground="#888" FontSize="11"/>
+                                <TextBlock Text="{Binding Duration, StringFormat={}{0:mm\\:ss}}"
+                                           Foreground="#888" FontSize="11"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Clear History" Padding="12,6" Click="ClearButton_Click" Margin="0,0,8,0"/>
+            <Button Content="Close" Padding="12,6" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

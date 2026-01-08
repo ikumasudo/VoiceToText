@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VoiceToText.Core.Audio\VoiceToText.Core.Audio.csproj" />
+    <ProjectReference Include="..\VoiceToText.Core.Hotkey\VoiceToText.Core.Hotkey.csproj" />
+    <ProjectReference Include="..\VoiceToText.Core.OpenAI\VoiceToText.Core.OpenAI.csproj" />
+    <ProjectReference Include="..\VoiceToText.Core.Paste\VoiceToText.Core.Paste.csproj" />
+  </ItemGroup>
+
+</Project>
