@@ -10,7 +10,7 @@ public partial class App : Application
 {
     private TaskbarIcon? _trayIcon;
     private MainViewModel? _viewModel;
-    private StatusOverlay? _statusOverlay;
+    private StatusIndicator? _statusIndicator;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -31,8 +31,9 @@ public partial class App : Application
         _viewModel.ErrorOccurred += OnErrorOccurred;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
 
-        // Initialize status overlay
-        _statusOverlay = new StatusOverlay();
+        // Initialize status indicator (always visible in bottom-right corner)
+        _statusIndicator = new StatusIndicator();
+        _statusIndicator.Show();
 
         // Create tray icon
         _trayIcon = new TaskbarIcon
@@ -66,11 +67,11 @@ public partial class App : Application
 
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainViewModel.State) && _viewModel != null && _statusOverlay != null)
+        if (e.PropertyName == nameof(MainViewModel.State) && _viewModel != null && _statusIndicator != null)
         {
             Dispatcher.Invoke(() =>
             {
-                _statusOverlay.UpdateState(_viewModel.State, _viewModel.StatusMessage);
+                _statusIndicator.UpdateState(_viewModel.State);
             });
         }
     }
@@ -122,7 +123,7 @@ public partial class App : Application
         _viewModel?.Stop();
         _viewModel?.Dispose();
         _trayIcon?.Dispose();
-        _statusOverlay?.Close();
+        _statusIndicator?.Close();
         base.OnExit(e);
     }
 

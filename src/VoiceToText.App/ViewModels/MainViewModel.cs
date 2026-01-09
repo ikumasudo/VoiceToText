@@ -16,7 +16,8 @@ public enum AppState
 {
     Idle,
     Recording,
-    Processing
+    Processing,
+    Done
 }
 
 /// <summary>
@@ -162,6 +163,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     if (injectResult.Success)
                     {
                         _history.Add(result.Text, e.Duration, true);
+                        State = AppState.Done;
                         StatusMessage = "Done!";
                         NotificationRequested?.Invoke(this, "Text pasted successfully");
                     }
@@ -179,30 +181,25 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     StatusMessage = "Transcription failed";
                     ErrorOccurred?.Invoke(this, errorMsg);
                 }
+
+                // Transition to Idle after delay
+                await TransitionToIdleAfterDelayAsync();
             }
             catch (Exception ex)
             {
                 _history.Add("", e.Duration, false, ex.Message);
                 StatusMessage = "Error";
                 ErrorOccurred?.Invoke(this, $"Error: {ex.Message}");
-            }
-            finally
-            {
-                State = AppState.Idle;
-
-                // Reset status after a delay
-                _ = Task.Delay(2000).ContinueWith(_ =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (State == AppState.Idle)
-                        {
-                            StatusMessage = "Ready";
-                        }
-                    });
-                });
+                await TransitionToIdleAfterDelayAsync();
             }
         });
+    }
+
+    private async Task TransitionToIdleAfterDelayAsync()
+    {
+        await Task.Delay(2000);
+        State = AppState.Idle;
+        StatusMessage = "Ready";
     }
 
     private static string GetUserFriendlyError(TranscriptionResult result)
