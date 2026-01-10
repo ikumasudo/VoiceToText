@@ -67,13 +67,24 @@ public partial class App : Application
 
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainViewModel.State) && _viewModel != null && _statusIndicator != null)
+        if (_viewModel == null || _statusIndicator == null) return;
+
+        Dispatcher.Invoke(() =>
         {
-            Dispatcher.Invoke(() =>
+            switch (e.PropertyName)
             {
-                _statusIndicator.UpdateState(_viewModel.State);
-            });
-        }
+                case nameof(MainViewModel.State):
+                    _statusIndicator.UpdateState(_viewModel.State);
+                    break;
+
+                case nameof(MainViewModel.AudioLevel):
+                    if (_viewModel.State == AppState.Recording)
+                    {
+                        _statusIndicator.UpdateAudioLevel(_viewModel.AudioLevel);
+                    }
+                    break;
+            }
+        });
     }
 
     private void OnNotificationRequested(object? sender, string message)

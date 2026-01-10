@@ -37,15 +37,35 @@
                   VerticalAlignment="Center"
                   Visibility="Visible"/>
 
-            <!-- Recording: Red microphone -->
-            <Path x:Name="RecordingIcon"
-                  Data="M12,2C10.34,2 9,3.34 9,5V11C9,12.66 10.34,14 12,14C13.66,14 15,12.66 15,11V5C15,3.34 13.66,2 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7C7,13.76 9.24,16 12,16C14.76,16 17,13.76 17,11H19Z"
-                  Fill="#F44336"
-                  Stretch="Uniform"
-                  Width="28" Height="28"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Visibility="Collapsed"/>
+            <!-- Recording: Red microphone + level meter -->
+            <Grid x:Name="RecordingPanel" Visibility="Collapsed">
+                <!-- Microphone icon (left side, slightly smaller) -->
+                <Path Data="M12,2C10.34,2 9,3.34 9,5V11C9,12.66 10.34,14 12,14C13.66,14 15,12.66 15,11V5C15,3.34 13.66,2 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7C7,13.76 9.24,16 12,16C14.76,16 17,13.76 17,11H19Z"
+                      Fill="#F44336"
+                      Stretch="Uniform"
+                      Width="22" Height="22"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Margin="8,0,0,0"/>
+
+                <!-- Level meter (right side) -->
+                <Grid HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Margin="0,0,10,0"
+                      Width="8" Height="32">
+
+                    <!-- Background (dark bar) -->
+                    <Border Background="#444444"
+                            CornerRadius="2"/>
+
+                    <!-- Active level (green bar) -->
+                    <Border x:Name="LevelBar"
+                            Background="#4CAF50"
+                            CornerRadius="2"
+                            VerticalAlignment="Bottom"
+                            Height="0"/>
+                </Grid>
+            </Grid>
 
             <!-- Processing: Amber pulsing circle -->
             <Path x:Name="ProcessingIcon"

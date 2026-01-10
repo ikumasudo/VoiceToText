@@ -25,6 +25,7 @@ public sealed class AudioRecorder : IAudioRecorder
 
     public event EventHandler<RecordingStateChangedEventArgs>? StateChanged;
     public event EventHandler<RecordingCompletedEventArgs>? RecordingCompleted;
+    public event EventHandler<AudioLevelEventArgs>? AudioLevelChanged;
 
     public void StartRecording()
     {
@@ -110,6 +111,38 @@ public sealed class AudioRecorder : IAudioRecorder
         {
             _waveWriter?.Write(e.Buffer, 0, e.BytesRecorded);
         }
+
+        // Calculate and notify audio level
+        float level = CalculateRmsLevel(e.Buffer, e.BytesRecorded);
+        AudioLevelChanged?.Invoke(this, new AudioLevelEventArgs(level));
+    }
+
+    /// <summary>
+    /// Calculates RMS (Root Mean Square) level from 16-bit PCM buffer
+    /// </summary>
+    private static float CalculateRmsLevel(byte[] buffer, int bytesRecorded)
+    {
+        if (bytesRecorded < 2) return 0f;
+
+        double sumSquares = 0;
+        int sampleCount = bytesRecorded / 2; // 16-bit = 2 bytes per sample
+
+        for (int i = 0; i < bytesRecorded; i += 2)
+        {
+            // Read 16-bit signed integer (little-endian)
+            short sample = (short)(buffer[i] | (buffer[i + 1] << 8));
+            double normalized = sample / 32768.0; // Normalize to -1.0 ~ 1.0
+            sumSquares += normalized * normalized;
+        }
+
+        double rms = Math.Sqrt(sumSquares / sampleCount);
+
+        // Convert to dB scale for more natural visual response
+        // Map -60dB to 0, 0dB to 1
+        double db = 20 * Math.Log10(Math.Max(rms, 1e-10));
+        float level = (float)Math.Clamp((db + 60) / 60, 0, 1);
+
+        return level;
     }
 
     private void OnRecordingStopped(object? sender, StoppedEventArgs e)

@@ -48,6 +48,11 @@ public interface IAudioRecorder : IDisposable
     event EventHandler<RecordingCompletedEventArgs>? RecordingCompleted;
 
     /// <summary>
+    /// Raised when audio level changes during recording
+    /// </summary>
+    event EventHandler<AudioLevelEventArgs>? AudioLevelChanged;
+
+    /// <summary>
     /// Starts recording audio from the default microphone
     /// </summary>
     void StartRecording();
@@ -73,5 +78,21 @@ public class RecordingCompletedEventArgs : EventArgs
         WavData = wavData;
         Duration = duration;
         WasMaxDurationReached = wasMaxDurationReached;
+    }
+}
+
+/// <summary>
+/// Event args for audio level changes
+/// </summary>
+public class AudioLevelEventArgs : EventArgs
+{
+    /// <summary>
+    /// Normalized audio level (0.0 to 1.0)
+    /// </summary>
+    public float Level { get; }
+
+    public AudioLevelEventArgs(float level)
+    {
+        Level = Math.Clamp(level, 0f, 1f);
     }
 }

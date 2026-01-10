@@ -43,6 +43,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _isApiKeyConfigured;
 
+    [ObservableProperty]
+    private float _audioLevel;
+
     public TranscriptionHistory History => _history;
     public AppSettings Settings => _settings;
 
@@ -63,6 +66,15 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _hotkey.HotkeyPressed += OnHotkeyPressed;
         _hotkey.HotkeyReleased += OnHotkeyReleased;
         _audioRecorder.RecordingCompleted += OnRecordingCompleted;
+        _audioRecorder.AudioLevelChanged += OnAudioLevelChanged;
+    }
+
+    private void OnAudioLevelChanged(object? sender, AudioLevelEventArgs e)
+    {
+        Application.Current?.Dispatcher?.BeginInvoke(() =>
+        {
+            AudioLevel = e.Level;
+        }, System.Windows.Threading.DispatcherPriority.Render);
     }
 
     public void Start()
@@ -237,6 +249,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         if (_isDisposed) return;
 
         Stop();
+        _audioRecorder.AudioLevelChanged -= OnAudioLevelChanged;
         _hotkey.Dispose();
         _audioRecorder.Dispose();
         if (_transcriptionService is IDisposable disposable)

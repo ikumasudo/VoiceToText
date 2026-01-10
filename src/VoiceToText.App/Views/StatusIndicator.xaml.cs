@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using VoiceToText.App.ViewModels;
 
@@ -7,6 +8,19 @@ namespace VoiceToText.App.Views;
 public partial class StatusIndicator : Window
 {
     private Storyboard? _pulseAnimation;
+    private const double MaxLevelHeight = 32.0;
+
+    // Cached brushes for level colors
+    private static readonly SolidColorBrush GreenBrush = new(Color.FromRgb(0x4C, 0xAF, 0x50));
+    private static readonly SolidColorBrush OrangeBrush = new(Color.FromRgb(0xFF, 0x98, 0x00));
+    private static readonly SolidColorBrush RedBrush = new(Color.FromRgb(0xFF, 0x57, 0x22));
+
+    static StatusIndicator()
+    {
+        GreenBrush.Freeze();
+        OrangeBrush.Freeze();
+        RedBrush.Freeze();
+    }
 
     public StatusIndicator()
     {
@@ -30,7 +44,7 @@ public partial class StatusIndicator : Window
 
         // Hide all icons
         IdleIcon.Visibility = Visibility.Collapsed;
-        RecordingIcon.Visibility = Visibility.Collapsed;
+        RecordingPanel.Visibility = Visibility.Collapsed;
         ProcessingIcon.Visibility = Visibility.Collapsed;
         DoneIcon.Visibility = Visibility.Collapsed;
 
@@ -42,7 +56,8 @@ public partial class StatusIndicator : Window
                 break;
 
             case AppState.Recording:
-                RecordingIcon.Visibility = Visibility.Visible;
+                RecordingPanel.Visibility = Visibility.Visible;
+                LevelBar.Height = 0; // Reset level bar
                 break;
 
             case AppState.Processing:
@@ -54,5 +69,23 @@ public partial class StatusIndicator : Window
                 DoneIcon.Visibility = Visibility.Visible;
                 break;
         }
+    }
+
+    /// <summary>
+    /// Updates the audio level meter
+    /// </summary>
+    /// <param name="level">Normalized audio level (0.0 to 1.0)</param>
+    public void UpdateAudioLevel(float level)
+    {
+        // Update bar height based on level
+        LevelBar.Height = level * MaxLevelHeight;
+
+        // Update color based on level: green -> orange -> red
+        LevelBar.Background = level switch
+        {
+            > 0.8f => RedBrush,
+            > 0.6f => OrangeBrush,
+            _ => GreenBrush
+        };
     }
 }
