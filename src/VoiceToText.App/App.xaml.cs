@@ -89,18 +89,10 @@ public partial class App : Application
 
     private void OnNotificationRequested(object? sender, string message)
     {
-        Dispatcher.Invoke(() =>
-        {
-            _trayIcon?.ShowBalloonTip("VoiceToText", message, BalloonIcon.Info);
-        });
     }
 
     private void OnErrorOccurred(object? sender, string error)
     {
-        Dispatcher.Invoke(() =>
-        {
-            _trayIcon?.ShowBalloonTip("VoiceToText Error", error, BalloonIcon.Error);
-        });
     }
 
     private void OnSettingsClick(object sender, RoutedEventArgs e)
