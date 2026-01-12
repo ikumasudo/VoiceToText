@@ -10,6 +10,7 @@ namespace VoiceToText.App;
 public partial class App : Application
 {
     private TaskbarIcon? _trayIcon;
+    private TrayToolTip? _trayToolTip;
     private MainViewModel? _viewModel;
     private StatusIndicator? _statusIndicator;
 
@@ -36,11 +37,15 @@ public partial class App : Application
         _statusIndicator = new StatusIndicator();
         _statusIndicator.Show();
 
+        // Create tray tooltip
+        _trayToolTip = new TrayToolTip();
+        _trayToolTip.UpdateHotkey(_viewModel.Settings.Hotkey.ToDisplayString());
+
         // Create tray icon
         _trayIcon = new TaskbarIcon
         {
             Icon = CreateDefaultIcon(),
-            ToolTipText = "VoiceToText - Ctrl+Alt+Space to record"
+            TrayToolTip = _trayToolTip
         };
 
         // Create context menu
@@ -106,6 +111,9 @@ public partial class App : Application
             _viewModel.Stop();
             _viewModel.UpdateSettings(settingsWindow.Result);
             _viewModel.Start();
+
+            // Update tray tooltip with new hotkey
+            _trayToolTip?.UpdateHotkey(_viewModel.Settings.Hotkey.ToDisplayString());
         }
     }
 
