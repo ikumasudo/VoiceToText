@@ -1,32 +1,48 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Microsoft.Win32;
 using VoiceToText.App.ViewModels;
 
 namespace VoiceToText.App.Views;
 
 public partial class StatusIndicator : Window
 {
-    private Storyboard? _pulseAnimation;
-    private const double MaxLevelHeight = 32.0;
+    private Storyboard? _waveAnimation;
+    private Storyboard? _spinnerAnimation;
+    private bool _isDarkMode;
 
-    // Cached brushes for level colors
-    private static readonly SolidColorBrush GreenBrush = new(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static readonly SolidColorBrush OrangeBrush = new(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static readonly SolidColorBrush RedBrush = new(Color.FromRgb(0xFF, 0x57, 0x22));
+    // Theme colors
+    private static readonly SolidColorBrush LightBackground = new(Color.FromArgb(0xE8, 0xFF, 0xFF, 0xFF));
+    private static readonly SolidColorBrush LightBorder = new(Color.FromArgb(0x20, 0x00, 0x00, 0x00));
+    private static readonly SolidColorBrush LightIdleIcon = new(Color.FromRgb(0x6B, 0x72, 0x80));
+
+    private static readonly SolidColorBrush DarkBackground = new(Color.FromArgb(0xE8, 0x1F, 0x1F, 0x1F));
+    private static readonly SolidColorBrush DarkBorder = new(Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF));
+    private static readonly SolidColorBrush DarkIdleIcon = new(Color.FromRgb(0x9C, 0xA3, 0xAF));
 
     static StatusIndicator()
     {
-        GreenBrush.Freeze();
-        OrangeBrush.Freeze();
-        RedBrush.Freeze();
+        LightBackground.Freeze();
+        LightBorder.Freeze();
+        LightIdleIcon.Freeze();
+        DarkBackground.Freeze();
+        DarkBorder.Freeze();
+        DarkIdleIcon.Freeze();
     }
 
     public StatusIndicator()
     {
         InitializeComponent();
         PositionWindow();
-        _pulseAnimation = (Storyboard)FindResource("PulseAnimation");
+        _waveAnimation = (Storyboard)FindResource("WaveAnimation");
+        _spinnerAnimation = (Storyboard)FindResource("SpinnerAnimation");
+
+        // Detect and apply system theme
+        DetectAndApplyTheme();
+
+        // Listen for theme changes
+        SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
     }
 
     private void PositionWindow()
@@ -37,18 +53,67 @@ public partial class StatusIndicator : Window
         Top = workArea.Bottom - Height - 10;
     }
 
+    private void DetectAndApplyTheme()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            var appsUseLightTheme = (int?)key?.GetValue("AppsUseLightTheme") ?? 1;
+            _isDarkMode = appsUseLightTheme == 0;
+        }
+        catch
+        {
+            _isDarkMode = false;
+        }
+
+        ApplyTheme();
+    }
+
+    private void ApplyTheme()
+    {
+        if (_isDarkMode)
+        {
+            MainBorder.Background = DarkBackground;
+            MainBorder.BorderBrush = DarkBorder;
+            IdleIcon.Fill = DarkIdleIcon;
+        }
+        else
+        {
+            MainBorder.Background = LightBackground;
+            MainBorder.BorderBrush = LightBorder;
+            IdleIcon.Fill = LightIdleIcon;
+        }
+    }
+
+    private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+    {
+        if (e.Category == UserPreferenceCategory.General)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                DetectAndApplyTheme();
+            });
+        }
+    }
+
     public void UpdateState(AppState state)
     {
-        // Stop any running animation
-        _pulseAnimation?.Stop();
+        // Stop all animations
+        _waveAnimation?.Stop();
+        _spinnerAnimation?.Stop();
 
-        // Hide all icons
+        // Hide all elements
         IdleIcon.Visibility = Visibility.Collapsed;
-        RecordingPanel.Visibility = Visibility.Collapsed;
-        ProcessingIcon.Visibility = Visibility.Collapsed;
+        RecordingIcon.Visibility = Visibility.Collapsed;
+        ProcessingSpinner.Visibility = Visibility.Collapsed;
         DoneIcon.Visibility = Visibility.Collapsed;
 
-        // Show the appropriate icon based on state
+        // Reset wave rings
+        WaveRing1.Opacity = 0;
+        WaveRing2.Opacity = 0;
+        WaveRing3.Opacity = 0;
+
+        // Show the appropriate element based on state
         switch (state)
         {
             case AppState.Idle:
@@ -56,13 +121,13 @@ public partial class StatusIndicator : Window
                 break;
 
             case AppState.Recording:
-                RecordingPanel.Visibility = Visibility.Visible;
-                LevelBar.Height = 0; // Reset level bar
+                RecordingIcon.Visibility = Visibility.Visible;
+                _waveAnimation?.Begin();
                 break;
 
             case AppState.Processing:
-                ProcessingIcon.Visibility = Visibility.Visible;
-                _pulseAnimation?.Begin();
+                ProcessingSpinner.Visibility = Visibility.Visible;
+                _spinnerAnimation?.Begin();
                 break;
 
             case AppState.Done:
@@ -72,20 +137,41 @@ public partial class StatusIndicator : Window
     }
 
     /// <summary>
-    /// Updates the audio level meter
+    /// Updates the wave animation intensity based on audio level.
+    /// Higher levels create more visible and faster waves.
     /// </summary>
     /// <param name="level">Normalized audio level (0.0 to 1.0)</param>
     public void UpdateAudioLevel(float level)
     {
-        // Update bar height based on level
-        LevelBar.Height = level * MaxLevelHeight;
+        // 1. Scale the microphone icon (1.0x to 1.4x) - larger change
+        var scale = 1.0 + (level * 0.4);
+        RecordingIconTransform.ScaleX = scale;
+        RecordingIconTransform.ScaleY = scale;
 
-        // Update color based on level: green -> orange -> red
-        LevelBar.Background = level switch
-        {
-            > 0.8f => RedBrush,
-            > 0.6f => OrangeBrush,
-            _ => GreenBrush
-        };
+        // 2. Gradient color change (pink → bright red)
+        // level 0.0: #F87171 (light pink-red)
+        // level 1.0: #FF0000 (pure red)
+        byte r = 0xFF;
+        byte g = (byte)(0x71 - (level * 0x71));  // 113 → 0
+        byte b = (byte)(0x71 - (level * 0x71));  // 113 → 0
+        var color = Color.FromRgb(r, g, b);
+
+        var brush = new SolidColorBrush(color);
+        WaveRing1.Stroke = brush;
+        WaveRing2.Stroke = brush;
+        WaveRing3.Stroke = brush;
+        RecordingIcon.Fill = brush;  // Icon color also changes
+
+        // 3. Wave ring stroke thickness (2px to 6px) - thicker at high levels
+        var thickness = 2 + (level * 4);
+        WaveRing1.StrokeThickness = thickness;
+        WaveRing2.StrokeThickness = thickness;
+        WaveRing3.StrokeThickness = thickness;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+        base.OnClosed(e);
     }
 }
