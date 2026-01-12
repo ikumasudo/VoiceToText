@@ -8,7 +8,8 @@ WPF System Tray application that records voice using a hotkey and transcribes it
 - **OpenAI Integration**: Uses gpt-4o-mini-transcribe (default) or whisper-1
 - **Clipboard Paste**: Automatically pastes transcribed text via Ctrl+V
 - **System Tray**: Runs silently in the background
-- **Status Overlay**: Visual feedback during recording/processing
+- **Status Indicator**: Visual feedback with audio level meter during recording
+- **Sound Effects**: Audio feedback for recording start/stop
 - **History**: View and copy recent transcriptions
 - **Secure API Key Storage**: Uses Windows DPAPI encryption
 
@@ -26,16 +27,10 @@ WPF System Tray application that records voice using a hotkey and transcribes it
 ### Build from Source
 
 ```bash
-# Clone the repository
 git clone https://github.com/ikumasudo/oto.git
 cd oto
-
-# Build and run
 dotnet build
 dotnet run --project src/oto.App
-
-# Or publish self-contained
-dotnet publish src/oto.App -c Release -r win-x64 --self-contained -o ./publish
 ```
 
 ## Requirements
@@ -64,7 +59,7 @@ Right-click the tray icon and select **Settings** to configure:
 | Language | Language hint (e.g., "ja", "en") | Auto-detect |
 | Add Punctuation | Include punctuation in output | Yes |
 | Preserve Newlines | Keep line breaks | Yes |
-| Restore Clipboard | Restore original clipboard after paste | Yes |
+| Sound Effects | Audio feedback for recording | Yes |
 
 ## Project Structure
 
@@ -80,63 +75,12 @@ oto/
 └── README.md
 ```
 
-## Key Components
-
-### Core.Hotkey
-- Uses `WH_KEYBOARD_LL` low-level keyboard hook
-- Detects both key press and release for hold-to-talk
-- Configurable modifier keys and main key
-
-### Core.Audio
-- Records from default microphone using NAudio
-- PCM 16-bit, Mono, 16kHz sample rate
-- Outputs WAV format for API compatibility
-
-### Core.OpenAI
-- HTTP client with multipart/form-data
-- Exponential backoff retry (1s, 2s, 4s)
-- Error categorization (auth, rate limit, network, etc.)
-
-### Core.Paste
-- Saves and restores clipboard content
-- Sends Ctrl+V via Windows SendInput API
-
-## Known Limitations (MVP)
-
-- Hold-to-talk only (no toggle mode)
-- Default microphone only (no device selection)
-- No streaming transcription
-- Space long-press not implemented (planned for future)
-
-## Future Enhancements
-
-- Space long-press mode (separate from normal space input)
-- Streaming transcription for real-time feedback
-- Audio device selection
-- Custom prompts for transcription
-- Hotword detection
-
-## Troubleshooting
-
-### "API Key is not configured"
-Open Settings and enter your OpenAI API key.
-
-### Hotkey not working
-- Ensure no other application is using the same hotkey
-- Try running as Administrator
-- Check that the app is running (visible in system tray)
-
-### Transcription fails
-- Verify your API key is valid
-- Check your internet connection
-- Review the error message in the balloon notification
-
 ## Uninstall
 
 1. Open **Settings** > **Apps** > **Apps & features**
 2. Find **oto** and click **Uninstall**
 
-Settings are stored in `%LOCALAPPDATA%\oto\` (delete manually to remove all data).
+Settings are stored in `%APPDATA%\oto\` (delete manually to remove all data).
 
 ## License
 
