@@ -1,0 +1,269 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="oto - Push-to-Talk Voice Transcription App">
+	<div class="navbar bg-base-100 shadow-lg">
+		<div class="flex-1">
+			<a class="btn btn-ghost text-xl">🎙️ oto</a>
+		</div>
+		<div class="flex-none gap-2">
+			<a href="#features" class="btn btn-ghost btn-sm">Features</a>
+			<a href="#installation" class="btn btn-ghost btn-sm">Installation</a>
+			<a href="#usage" class="btn btn-ghost btn-sm">Usage</a>
+			<a href="https://github.com/ikumasudo/oto/releases/latest" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Download</a>
+		</div>
+	</div>
+
+	<div class="hero min-h-screen bg-base-100">
+		<div class="hero-content text-center">
+			<div class="max-w-2xl">
+				<div class="badge badge-primary mb-4">v1.0.0</div>
+				<h1 class="text-5xl font-bold mb-6">Push-to-Talk Voice Transcription</h1>
+				<p class="py-6 text-lg">WPF System Tray application that records voice using a hotkey and transcribes it using OpenAI's Audio Transcriptions API, then pastes the text into the focused application.</p>
+				<div class="flex gap-4 justify-center">
+					<a href="https://github.com/ikumasudo/oto/releases/latest" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+						Download for Windows
+					</a>
+					<a href="https://github.com/ikumasudo/oto" target="_blank" rel="noopener" class="btn btn-outline btn-lg">
+						View on GitHub
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="features" class="py-20 bg-base-200">
+		<div class="container mx-auto px-4">
+			<h2 class="text-4xl font-bold text-center mb-12">Features</h2>
+			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title">
+							<span class="text-2xl">⌨️</span>
+							Hold-to-Talk
+						</h3>
+						<p>Hold Ctrl+Alt+Space to record, release to transcribe. Simple and intuitive.</p>
+					</div>
+				</div>
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title">
+							<span class="text-2xl">🤖</span>
+							OpenAI Integration
+						</h3>
+						<p>Uses gpt-4o-mini-transcribe (default) or whisper-1 for accurate transcriptions.</p>
+					</div>
+				</div>
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title">
+							<span class="text-2xl">📋</span>
+							Auto Paste
+						</h3>
+						<p>Automatically pastes transcribed text via Ctrl+V into your active application.</p>
+					</div>
+				</div>
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title">
+							<span class="text-2xl">🔒</span>
+							Secure Storage
+						</h3>
+						<p>API keys are encrypted using Windows DPAPI for maximum security.</p>
+					</div>
+				</div>
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title">
+							<span class="text-2xl">🔔</span>
+							System Tray
+						</h3>
+						<p>Runs silently in the background with easy access to settings.</p>
+					</div>
+				</div>
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="card-title">
+							<span class="text-2xl">📜</span>
+							History
+						</h3>
+						<p>View and copy recent transcriptions with the built-in history viewer.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="installation" class="py-20 bg-base-100">
+		<div class="container mx-auto px-4">
+			<h2 class="text-4xl font-bold text-center mb-12">Installation</h2>
+			<div class="tabs tabs-boxed mb-6">
+				<a class="tab tab-active" onclick="showInstallTab('download')">Download (Recommended)</a>
+				<a class="tab" onclick="showInstallTab('source')">Build from Source</a>
+			</div>
+			
+			<div id="install-download" class="install-content">
+				<div class="card bg-base-200 shadow-xl max-w-2xl mx-auto">
+					<div class="card-body">
+						<ol class="list-decimal list-inside space-y-3">
+							<li>Go to <a href="https://github.com/ikumasudo/oto/releases/latest" class="link link-primary" target="_blank" rel="noopener">Releases</a></li>
+							<li>Download <code class="badge badge-neutral">oto-Setup-X.X.X.exe</code></li>
+							<li>Run the installer</li>
+							<li>Launch oto from Start Menu or Desktop</li>
+						</ol>
+						<div class="alert alert-success mt-6">
+							<svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+							<span><strong>No .NET runtime installation required</strong> - the application is fully self-contained.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="install-source" class="install-content hidden">
+				<div class="card bg-base-200 shadow-xl max-w-3xl mx-auto">
+					<div class="card-body">
+						<h3 class="card-title text-xl mb-4">Build and Run</h3>
+						<div class="mockup-code bg-neutral text-neutral-content">
+							<pre data-prefix="$"><code>git clone https://github.com/ikumasudo/oto.git</code></pre>
+							<pre data-prefix="$"><code>cd oto</code></pre>
+							<pre data-prefix="$"><code>dotnet build</code></pre>
+							<pre data-prefix="$"><code>dotnet run --project src/oto.App</code></pre>
+						</div>
+						<h3 class="card-title text-xl mb-4 mt-6">Publish Self-Contained</h3>
+						<div class="mockup-code bg-neutral text-neutral-content">
+							<pre data-prefix="$"><code>dotnet publish src/oto.App -c Release -r win-x64 --self-contained -o ./publish</code></pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="usage" class="py-20 bg-base-200">
+		<div class="container mx-auto px-4">
+			<h2 class="text-4xl font-bold text-center mb-12">How to Use</h2>
+			<div class="max-w-3xl mx-auto">
+				<ul class="steps steps-vertical lg:steps-horizontal w-full">
+					<li class="step step-primary">
+						<div class="text-center">
+							<div class="text-2xl mb-2">⚙️</div>
+							<div>First Run</div>
+							<p class="text-sm text-base-content/70 mt-1">Right-click tray icon > Settings > Enter API Key</p>
+						</div>
+					</li>
+					<li class="step step-primary">
+						<div class="text-center">
+							<div class="text-2xl mb-2">🎙️</div>
+							<div>Recording</div>
+							<p class="text-sm text-base-content/70 mt-1">Hold Ctrl+Alt+Space</p>
+						</div>
+					</li>
+					<li class="step step-primary">
+						<div class="text-center">
+							<div class="text-2xl mb-2">⏹️</div>
+							<div>Release</div>
+							<p class="text-sm text-base-content/70 mt-1">Release to transcribe</p>
+						</div>
+					</li>
+					<li class="step step-primary">
+						<div class="text-center">
+							<div class="text-2xl mb-2">✨</div>
+							<div>Done!</div>
+							<p class="text-sm text-base-content/70 mt-1">Text pasted automatically</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="py-20 bg-base-100">
+		<div class="container mx-auto px-4">
+			<h2 class="text-4xl font-bold text-center mb-12">Configuration</h2>
+			<div class="overflow-x-auto max-w-4xl mx-auto">
+				<table class="table table-zebra">
+					<thead>
+						<tr>
+							<th>Setting</th>
+							<th>Description</th>
+							<th>Default</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>API Key</strong></td>
+							<td>Your OpenAI API key</td>
+							<td><span class="badge badge-warning">required</span></td>
+						</tr>
+						<tr>
+							<td><strong>Model</strong></td>
+							<td>Transcription model</td>
+							<td><code>gpt-4o-mini-transcribe</code></td>
+						</tr>
+						<tr>
+							<td><strong>Hotkey</strong></td>
+							<td>Key combination for recording</td>
+							<td><code>Ctrl+Alt+Space</code></td>
+						</tr>
+						<tr>
+							<td><strong>Max Duration</strong></td>
+							<td>Maximum recording time (seconds)</td>
+							<td><code>60</code></td>
+						</tr>
+						<tr>
+							<td><strong>Language</strong></td>
+							<td>Language hint (e.g., "ja", "en")</td>
+							<td><code>Auto-detect</code></td>
+						</tr>
+						<tr>
+							<td><strong>Add Punctuation</strong></td>
+							<td>Include punctuation in output</td>
+							<td><span class="badge badge-success">Yes</span></td>
+						</tr>
+						<tr>
+							<td><strong>Preserve Newlines</strong></td>
+							<td>Keep line breaks</td>
+							<td><span class="badge badge-success">Yes</span></td>
+						</tr>
+						<tr>
+							<td><strong>Restore Clipboard</strong></td>
+							<td>Restore original clipboard after paste</td>
+							<td><span class="badge badge-success">Yes</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="py-20 bg-base-200">
+		<div class="container mx-auto px-4 text-center">
+			<h2 class="text-4xl font-bold mb-6">Get Started Today</h2>
+			<p class="text-lg mb-8 max-w-2xl mx-auto">Download oto and start transcribing your voice with just a hotkey press.</p>
+			<a href="https://github.com/ikumasudo/oto/releases/latest" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+				Download for Windows
+			</a>
+		</div>
+	</div>
+
+	<footer class="footer items-center p-4 bg-neutral text-neutral-content">
+		<aside class="items-center grid-flow-col">
+			<p>Copyright © 2024 - All right reserved by ikumasudo</p>
+		</aside>
+		<nav class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+			<a href="https://github.com/ikumasudo/oto" target="_blank" rel="noopener" class="btn btn-square btn-ghost">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+			</a>
+		</nav>
+	</footer>
+
+	<script>
+		function showInstallTab(tab) {
+			document.querySelectorAll('.install-content').forEach(el => el.classList.add('hidden'));
+			document.querySelectorAll('.tabs a').forEach(el => el.classList.remove('tab-active'));
+			document.getElementById(`install-${tab}`).classList.remove('hidden');
+			event.target.classList.add('tab-active');
+		}
+	</script>
+</Layout>

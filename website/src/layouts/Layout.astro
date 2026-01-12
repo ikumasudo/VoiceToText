@@ -1,0 +1,19 @@
+---
+import '../styles/global.css';
+const { title = 'oto - Push-to-Talk Voice Transcription App' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content="WPF System Tray application that records voice using a hotkey and transcribes it using OpenAI's Audio Transcriptions API, then pastes the text into the focused application." />
+		<title>{title}</title>
+	</head>
+	<body class="min-h-screen bg-base-200">
+		<slot />
+	</body>
+</html>
