@@ -1,4 +1,6 @@
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Microsoft.Win32;
@@ -8,6 +10,16 @@ namespace oto.App.Views;
 
 public partial class StatusIndicator : Window
 {
+    // Win32 API for hiding window from Alt+Tab
+    private const int GWL_EXSTYLE = -20;
+    private const int WS_EX_TOOLWINDOW = 0x00000080;
+
+    [DllImport("user32.dll")]
+    private static extern int GetWindowLong(IntPtr hwnd, int index);
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
     private Storyboard? _waveAnimation;
     private Storyboard? _spinnerAnimation;
     private bool _isDarkMode;
@@ -51,6 +63,16 @@ public partial class StatusIndicator : Window
         var workArea = SystemParameters.WorkArea;
         Left = workArea.Right - Width - 10;
         Top = workArea.Bottom - Height - 10;
+    }
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        // Set WS_EX_TOOLWINDOW to hide from Alt+Tab
+        var hwnd = new WindowInteropHelper(this).Handle;
+        var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TOOLWINDOW);
     }
 
     private void DetectAndApplyTheme()
