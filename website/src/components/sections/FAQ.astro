@@ -1,0 +1,43 @@
+---
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const faqs = [
+  { q: 'faq.q1' as const, a: 'faq.a1' as const },
+  { q: 'faq.q2' as const, a: 'faq.a2' as const },
+  { q: 'faq.q3' as const, a: 'faq.a3' as const },
+  { q: 'faq.q4' as const, a: 'faq.a4' as const },
+  { q: 'faq.q5' as const, a: 'faq.a5' as const },
+];
+---
+
+<section id="faq" class="py-24 bg-base-100">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gradient">
+        {t('faq.title')}
+      </h2>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="max-w-3xl mx-auto space-y-4">
+      {faqs.map((faq, index) => (
+        <div class="collapse collapse-plus bg-base-200/50 border border-base-300/50 hover:border-primary/30 transition-colors">
+          <input type="radio" name="faq-accordion" checked={index === 0} />
+          <div class="collapse-title text-lg font-medium flex items-center gap-3">
+            <svg class="w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {t(faq.q)}
+          </div>
+          <div class="collapse-content">
+            <p class="text-base-content/80 pt-2 pl-8">{t(faq.a)}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

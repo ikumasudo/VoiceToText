@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/sections/Hero.astro';
+import Features from '../components/sections/Features.astro';
+import Pricing from '../components/sections/Pricing.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import Download from '../components/sections/Download.astro';
+import FAQ from '../components/sections/FAQ.astro';
+---
+
+<Layout
+  title="oto - 声で、入力する。"
+  description="ホットキーを押すだけで音声をテキストに変換。OpenAI APIで高精度な文字起こし。Windows 10/11対応。"
+>
+  <Navbar />
+  <main>
+    <Hero />
+    <Features />
+    <Pricing />
+    <HowItWorks />
+    <Download />
+    <FAQ />
+  </main>
+  <Footer />
+</Layout>

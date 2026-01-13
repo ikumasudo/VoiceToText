@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import { getLangFromUrl } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'oto - 音声入力アプリ。ホットキーで音声をテキストに変換。' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const base = import.meta.env.BASE_URL || '/';
+---
+
+<!doctype html>
+<html lang={lang} data-theme="oto-light">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+
+    <!-- OGP -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="oto" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Alternate languages -->
+    <link rel="alternate" hreflang="ja" href={`${base}`} />
+    <link rel="alternate" hreflang="en" href={`${base}en/`} />
+    <link rel="alternate" hreflang="x-default" href={`${base}`} />
+
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-base-100">
+    <slot />
+  </body>
+</html>
+
+<script>
+  // Check for system dark mode preference
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'oto-dark');
+  }
+
+  // Listen for changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    document.documentElement.setAttribute('data-theme', e.matches ? 'oto-dark' : 'oto-light');
+  });
+</script>

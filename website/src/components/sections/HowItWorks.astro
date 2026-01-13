@@ -1,0 +1,94 @@
+---
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const steps = [
+  {
+    num: 1,
+    titleKey: 'howto.step1.title' as const,
+    descKey: 'howto.step1.desc' as const,
+    icon: 'download',
+  },
+  {
+    num: 2,
+    titleKey: 'howto.step2.title' as const,
+    descKey: 'howto.step2.desc' as const,
+    icon: 'key',
+  },
+  {
+    num: 3,
+    titleKey: 'howto.step3.title' as const,
+    descKey: 'howto.step3.desc' as const,
+    icon: 'mic',
+  },
+  {
+    num: 4,
+    titleKey: 'howto.step4.title' as const,
+    descKey: 'howto.step4.desc' as const,
+    icon: 'paste',
+  },
+];
+---
+
+<section id="howto" class="py-24 bg-base-100">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gradient">
+        {t('howto.title')}
+      </h2>
+      <p class="text-xl text-base-content/70 max-w-2xl mx-auto">
+        {t('howto.subtitle')}
+      </p>
+    </div>
+
+    <!-- Steps -->
+    <div class="max-w-4xl mx-auto">
+      <ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+        {steps.map((step, index) => (
+          <li>
+            {index > 0 && <hr class="bg-primary" />}
+            <div class="timeline-middle">
+              <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center font-bold">
+                {step.num}
+              </div>
+            </div>
+            <div class={`timeline-${index % 2 === 0 ? 'start' : 'end'} md:text-${index % 2 === 0 ? 'end' : 'start'} mb-10`}>
+              <div class="card bg-base-200/50 hover:bg-base-200 transition-colors border border-base-300/50">
+                <div class="card-body p-6">
+                  <div class="flex items-center gap-3 mb-2">
+                    {step.icon === 'download' && (
+                      <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    )}
+                    {step.icon === 'key' && (
+                      <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                      </svg>
+                    )}
+                    {step.icon === 'mic' && (
+                      <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                      </svg>
+                    )}
+                    {step.icon === 'paste' && (
+                      <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                      </svg>
+                    )}
+                    <h3 class="font-bold text-lg">{t(step.titleKey)}</h3>
+                  </div>
+                  <p class="text-base-content/70">{t(step.descKey)}</p>
+                </div>
+              </div>
+            </div>
+            {index < steps.length - 1 && <hr class="bg-primary" />}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

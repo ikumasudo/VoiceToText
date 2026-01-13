@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import Hero from '../../components/sections/Hero.astro';
+import Features from '../../components/sections/Features.astro';
+import Pricing from '../../components/sections/Pricing.astro';
+import HowItWorks from '../../components/sections/HowItWorks.astro';
+import Download from '../../components/sections/Download.astro';
+import FAQ from '../../components/sections/FAQ.astro';
+---
+
+<Layout
+  title="oto - Voice to Text, Instantly."
+  description="Press a hotkey to transcribe your voice. Powered by OpenAI for accurate transcription. For Windows 10/11."
+>
+  <Navbar />
+  <main>
+    <Hero />
+    <Features />
+    <Pricing />
+    <HowItWorks />
+    <Download />
+    <FAQ />
+  </main>
+  <Footer />
+</Layout>

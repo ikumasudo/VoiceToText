@@ -1,0 +1,97 @@
+---
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const features = [
+  {
+    icon: 'push-to-talk',
+    titleKey: 'features.push-to-talk.title' as const,
+    descKey: 'features.push-to-talk.desc' as const,
+  },
+  {
+    icon: 'openai',
+    titleKey: 'features.openai.title' as const,
+    descKey: 'features.openai.desc' as const,
+  },
+  {
+    icon: 'auto-paste',
+    titleKey: 'features.auto-paste.title' as const,
+    descKey: 'features.auto-paste.desc' as const,
+  },
+  {
+    icon: 'secure',
+    titleKey: 'features.secure.title' as const,
+    descKey: 'features.secure.desc' as const,
+  },
+  {
+    icon: 'tray',
+    titleKey: 'features.tray.title' as const,
+    descKey: 'features.tray.desc' as const,
+  },
+  {
+    icon: 'standalone',
+    titleKey: 'features.standalone.title' as const,
+    descKey: 'features.standalone.desc' as const,
+  },
+];
+---
+
+<section id="features" class="py-24 bg-base-100">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gradient">
+        {t('features.title')}
+      </h2>
+      <p class="text-xl text-base-content/70 max-w-2xl mx-auto">
+        {t('features.subtitle')}
+      </p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      {features.map((feature) => (
+        <div class="card bg-base-200/50 hover:bg-base-200 transition-colors border border-base-300/50 hover:border-primary/30 hover:shadow-lg">
+          <div class="card-body">
+            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              {feature.icon === 'push-to-talk' && (
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+              )}
+              {feature.icon === 'openai' && (
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              )}
+              {feature.icon === 'auto-paste' && (
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              )}
+              {feature.icon === 'secure' && (
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              )}
+              {feature.icon === 'tray' && (
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              )}
+              {feature.icon === 'standalone' && (
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+              )}
+            </div>
+            <h3 class="card-title text-lg">{t(feature.titleKey)}</h3>
+            <p class="text-base-content/70">{t(feature.descKey)}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
